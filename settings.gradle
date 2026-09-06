@@ -8,6 +8,13 @@ pluginManagement {
     }
 }
 
-include("Common", "Common-NeoForgeApi", "Common-ForgeApi", "Fabric", "NeoForge", "Forge")
+include("Common", "Common-NeoForgeApi", "Common-ForgeApi")
+def minefedLoaders = providers.gradleProperty("minefedLoaders").orElse("Fabric,NeoForge,Forge").get().split(",").collect { it.trim() }
+minefedLoaders.each { loader ->
+    if (!(loader in ["Fabric", "NeoForge", "Forge"])) {
+        throw new GradleException("Unknown loader: ${loader}")
+    }
+    include(loader)
+}
 
 apply from: "https://raw.githubusercontent.com/Fuzss/modresources/e6311c7c40cfb0fe4240f22fd80efbbe9c554585/gradle/v2/settings.gradle"
